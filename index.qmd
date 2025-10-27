@@ -1,0 +1,158 @@
+---
+title: "Analis de data"
+author: "Juan Carlos Torres Salazar"
+format: html
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+## lamar a librerias 
+
+```{r}
+library(ggplot2)
+library(emmeans)
+library(dplyr)
+library(readxl)
+library(lme4)
+library(emmeans)
+library(multcomp)
+library(tidyr)
+```
+
+## llamado a la data 
+
+
+```{r}
+library(readxl)
+data <- read_excel("C:/Users/Lenovo/Downloads/TydeData.xlsx", 
+    sheet = "data")
+View(data)
+```
+
+## Arreglo de la base de datos 
+
+```{r}
+# Limpiar nombres duplicados
+data <- data[, !duplicated(names(data))]
+
+# Convertir a factor
+data$bloque <- as.factor(data$bloque)
+data$tratamiento <- as.factor(data$tratamiento)  # cada repetición = genotipo
+
+# Verificar que solo haya 20 niveles
+levels(data$tratamiento)  # debe dar 20
+table(data$tratamiento)   # revisa cuántas veces aparece cada genotipo por bloque
+```
+```{r}
+data <- data %>%
+  mutate(tratamiento = factor(tratamiento, levels = c("T0","T1","T2","T3","T4")))
+```
+
+
+
+## Modelo lineal para cada variable y su analisis de varianza (ANOVA) para cada variable
+
+# para la varible "número_mazorca_planta"
+
+$$ wue_{número_mazorca_planta} = \mu + bloque + tratamiento +e $$
+# Anova para "número_mazorca_planta"
+
+```{r}
+anova_45 <- aov(número_mazorca_planta ~ bloque + tratamiento, data = data)
+summary(anova_45)
+```
+# # para la varible "longitud_de_mazorca_planta"
+# Modelo lineal 
+
+$$ wue_{longitud_de_mazorca_planta} = \mu + bloque + tratamiento +e $$
+# Anova para "longitud_de_mazorca_planta"
+
+```{r}
+anova_46 <- aov(longitud_de_mazorca_planta ~ bloque + tratamiento, data = data)
+summary(anova_46)
+```
+
+# # para la varible "peso_de_granos_mazorca"
+# Modelo lineal
+
+$$ wue_{peso_de_granos_mazorca} = \mu + bloque + tratamiento +e $$
+# Anova para "peso_de_granos_mazorca"
+
+```{r}
+anova_47 <- aov(peso_de_granos_mazorca ~ bloque + tratamiento, data = data)
+summary(anova_47)
+```
+
+# # para la varible "rendimiento_en_Kg_ha_de_maíz"
+# Modelo lineal
+
+$$ wue_{rendimiento_en_Kg_ha_de_maíz} = \mu + bloque + tratamiento +e $$
+# Anova para "peso_de_granos_mazorca"
+
+```{r}
+anova_48 <- aov(peso_de_granos_mazorca ~ bloque + tratamiento, data = data)
+summary(anova_48)
+```
+
+## Comparacion de medias por variable 
+
+# Analis de medias para la variable "número_mazorca_planta"
+
+```{r}
+# Estimar medias ajustadas (Least Squares Means)
+emm_45 <- emmeans(anova_45, ~ tratamiento)
+
+# Comparación de todas las medias con ajuste Tukey
+comparaciones_45 <- contrast(emm_45, method = "tukey")
+
+# Ver resultados
+comparaciones_45
+
+# Ver medias ordenadas y letras de significancia
+cld(emm_45, Letters = letters)
+```
+
+# Analis de medias para la variable "longitud_de_mazorca_planta"
+
+```{r}
+# Estimar medias ajustadas (Least Squares Means)
+emm_46 <- emmeans(anova_46, ~ tratamiento)
+
+# Comparación de todas las medias con ajuste Tukey
+comparaciones_46 <- contrast(emm_46, method = "tukey")
+
+# Ver resultados
+comparaciones_46
+
+# Ver medias ordenadas y letras de significancia
+cld(emm_46, Letters = letters)
+```
+# Analis de medias para la variable "peso_de_granos_mazorca"
+
+
+```
+
+
+
+
+
