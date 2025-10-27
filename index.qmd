@@ -37,6 +37,7 @@ library(lme4)
 library(emmeans)
 library(multcomp)
 library(tidyr)
+
 ```
 
 ## llamado a la data 
@@ -150,9 +151,34 @@ cld(emm_46, Letters = letters)
 # Analis de medias para la variable "peso_de_granos_mazorca"
 
 
+```{r}
+# Estimar medias ajustadas (Least Squares Means)
+emm_47 <- emmeans(anova_47, ~ tratamiento)
+
+# Comparación de todas las medias con ajuste Tukey
+comparaciones_47 <- contrast(emm_47, method = "tukey")
+
+# Ver resultados
+comparaciones_47
+
+# Ver medias ordenadas y letras de significancia
+cld(emm_47, Letters = letters)
 ```
+# Analis de medias para la variable "rendimiento_en_Kg_ha_de_maíz"
 
+```{r}
+# Estimar medias ajustadas (Least Squares Means)
+emm_48 <- emmeans(anova_48, ~ tratamiento)
 
+# Comparación de todas las medias con ajuste Tukey
+comparaciones_48 <- contrast(emm_48, method = "tukey")
+
+# Ver resultados
+comparaciones_48
+
+# Ver medias ordenadas y letras de significancia
+cld(emm_48, Letters = letters)
+```
 
 
 
